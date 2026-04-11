@@ -12,15 +12,17 @@ class Service extends Model
 
     protected $fillable = [
         'title',
+        'type',
+        'image',
         'description',
         'availability',
         'is_deleted',
         'cooperative_id',
         'place_id',
-        'guide_id',
         'hotel_id',
         'transport_id',
         'price',
+        'rating',
     ];
 
     public function cooperative()
@@ -31,11 +33,6 @@ class Service extends Model
     public function place()
     {
         return $this->belongsTo(Place::class);
-    }
-
-    public function guide()
-    {
-        return $this->belongsTo(Guide::class);
     }
 
     public function hotel()

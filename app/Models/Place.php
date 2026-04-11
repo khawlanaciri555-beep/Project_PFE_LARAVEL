@@ -15,6 +15,8 @@ class Place extends Model
         'address',
         'image',
         'description',
+        'category',
+        'coordinates',
         'is_deleted',
     ];
 
@@ -31,5 +33,25 @@ class Place extends Model
     public function planningItems()
     {
         return $this->hasMany(PlanningItem::class);
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return round($this->ratings()->avg('rating') ?? 0, 1);
+    }
+
+    public function getTotalVotesAttribute()
+    {
+        return $this->ratings()->count();
     }
 }

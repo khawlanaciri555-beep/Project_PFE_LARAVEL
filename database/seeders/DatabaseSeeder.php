@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             PlaceSeeder::class,
-            GuideSeeder::class,
             HotelSeeder::class,
             CooperativeSeeder::class,
             TransportSeeder::class,
@@ -34,6 +33,7 @@ class DatabaseSeeder extends Seeder
             PlanningSeeder::class,
             PlanningItemSeeder::class,
             EmergencySeeder::class,
+            RatingSeeder::class,
         ]);
     }
 }

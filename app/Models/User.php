@@ -49,11 +49,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function guides()
-    {
-        return $this->hasMany(Guide::class);
-    }
-
     public function hotels()
     {
         return $this->hasMany(Hotel::class);
@@ -87,5 +82,15 @@ class User extends Authenticatable
     public function emergencies()
     {
         return $this->hasMany(Emergency::class);
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }

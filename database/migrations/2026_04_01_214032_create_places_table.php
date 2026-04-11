@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('address');
             $table->string('image');
             $table->string('description');
+            $table->string('category')->nullable();
+            $table->string('coordinates')->nullable();
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });

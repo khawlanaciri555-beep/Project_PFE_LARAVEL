@@ -19,7 +19,6 @@ return new class extends Migration
             $table->boolean('is_deleted')->default(false);
             $table->foreignId('cooperative_id')->constrained('cooperatives')->cascadeOnDelete();
             $table->foreignId('place_id')->constrained('places')->cascadeOnDelete();
-            $table->foreignId('guide_id')->constrained('guides')->cascadeOnDelete();
             $table->foreignId('hotel_id')->constrained('hotels')->cascadeOnDelete();
             $table->foreignId('transport_id')->constrained('transports')->cascadeOnDelete();
             $table->integer('price');

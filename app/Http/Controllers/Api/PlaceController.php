@@ -23,6 +23,8 @@ class PlaceController extends Controller
             'address' => 'required|string',
             'image' => 'required|string',
             'description' => 'required|string',
+            'category' => 'nullable|string',
+            'coordinates' => 'nullable|string',
         ]);
 
         $place = \App\Models\Place::create($validated);
@@ -42,6 +44,8 @@ class PlaceController extends Controller
             'address' => 'sometimes|string',
             'image' => 'sometimes|string',
             'description' => 'sometimes|string',
+            'category' => 'sometimes|string',
+            'coordinates' => 'sometimes|string',
         ]);
 
         $place->update($validated);
