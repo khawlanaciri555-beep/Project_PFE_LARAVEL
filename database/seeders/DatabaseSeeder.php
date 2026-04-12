@@ -21,19 +21,5 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
-
-        $this->call([
-            PlaceSeeder::class,
-            HotelSeeder::class,
-            CooperativeSeeder::class,
-            TransportSeeder::class,
-            ServiceSeeder::class,
-            BookingSeeder::class,
-            FavoriteSeeder::class,
-            PlanningSeeder::class,
-            PlanningItemSeeder::class,
-            EmergencySeeder::class,
-            RatingSeeder::class,
-        ]);
     }
 }
