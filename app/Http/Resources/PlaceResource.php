@@ -42,6 +42,15 @@ class PlaceResource extends JsonResource
             }
         }
 
+        $images = [];
+
+        // Add images from the database gallery if present
+        if ($this->gallery && is_array($this->gallery)) {
+            foreach ($this->gallery as $path) {
+                $images[] = asset('storage/' . $path);
+            }
+        }
+
         if ($targetDir) {
             $files = \Illuminate\Support\Facades\Storage::disk('public')->files($targetDir);
             foreach ($files as $file) {
@@ -57,6 +66,37 @@ class PlaceResource extends JsonResource
             $images[] = str_starts_with($this->image, 'http') ? $this->image : asset('storage/' . $this->image);
         }
 
+        $servicesRaw = $this->services()->with(['hotel', 'transport', 'cooperative'])->get();
+        $groupedServices = [
+            'guides' => [],
+            'hotels' => [],
+            'activites' => [],
+            'restaurants' => [],
+            'transport' => []
+        ];
+
+        foreach ($servicesRaw as $s) {
+            $item = [
+                'id' => $s->id,
+                'title' => $s->title,
+                'type' => $s->type,
+                'image' => str_starts_with($s->image, 'http') ? $s->image : asset('storage/' . $s->image),
+                'description' => $s->description,
+                'price' => $s->price,
+                'rating' => $s->rating ?? 0,
+            ];
+
+            if ($s->hotel_id) {
+                // If it's linked to a hotel, we use the hotel type if available
+                $item['hotel_type'] = $s->hotel ? $s->hotel->type : $s->type;
+                $groupedServices['hotels'][] = $item;
+            } elseif ($s->transport_id) {
+                $groupedServices['transport'][] = $item;
+            } else {
+                $groupedServices['activites'][] = $item;
+            }
+        }
+
         return [
             'id' => $this->id,
             'title' => $this->name,
@@ -65,13 +105,7 @@ class PlaceResource extends JsonResource
             'coordinates' => $this->coordinates,
             'image' => (count($images) > 0) ? $images[0] : ($this->image ? (str_starts_with($this->image, 'http') ? $this->image : asset('storage/' . $this->image)) : null),
             'images' => $images,
-            'services' => [
-                'guides' => [],
-                'hotels' => [],
-                'activites' => [],
-                'restaurants' => [],
-                'transport' => []
-            ],
+            'services' => $groupedServices,
             'favorite_id' => auth('sanctum')->check() 
                 ? $this->favorites()->where('user_id', auth('sanctum')->id())->first()?->id 
                 : null,

@@ -12,7 +12,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = \App\Models\Service::with(['cooperative', 'place', 'guide', 'hotel', 'transport'])
+        $services = \App\Models\Service::with(['cooperative', 'place', 'hotel', 'transport'])
             ->where('is_deleted', false)
             ->get();
         return \App\Http\Resources\ServiceResource::collection($services);
@@ -38,7 +38,7 @@ class ServiceController extends Controller
     public function show(\App\Models\Service $service)
     {
         if ($service->is_deleted) return response()->json(['message' => 'Service not found'], 404);
-        return new \App\Http\Resources\ServiceResource($service->load(['cooperative', 'place', 'guide', 'hotel', 'transport']));
+        return new \App\Http\Resources\ServiceResource($service->load(['cooperative', 'place', 'hotel', 'transport']));
     }
 
     public function update(Request $request, \App\Models\Service $service)
