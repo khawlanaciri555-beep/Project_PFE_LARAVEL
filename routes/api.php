@@ -26,4 +26,9 @@ Route::apiResource('transports', \App\Http\Controllers\Api\TransportController::
 Route::apiResource('places', \App\Http\Controllers\Api\PlaceController::class);
 Route::apiResource('services', \App\Http\Controllers\Api\ServiceController::class);
 Route::apiResource('bookings', \App\Http\Controllers\Api\BookingController::class);
-Route::apiResource('bookings', \App\Http\Controllers\Api\BookingController::class);
+
+Route::middleware('auth:sanctum')->prefix('dashboard')->group(function() {
+    Route::get('/stats', [\App\Http\Controllers\Api\DashboardController::class, 'stats']);
+    Route::get('/profile', [\App\Http\Controllers\Api\DashboardController::class, 'profile']);
+    Route::put('/profile', [\App\Http\Controllers\Api\DashboardController::class, 'updateProfile']);
+});

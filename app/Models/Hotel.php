@@ -19,9 +19,16 @@ class Hotel extends Model
         'price',
         'description',
         'user_id',
+        'place_id',
+        'image',
         'availability',
         'is_deleted',
     ];
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
 
     public function user()
     {

@@ -18,9 +18,17 @@ class Cooperative extends Model
         'image',
         'description',
         'user_id',
+        'place_id',
+        'image',
+        'certificate',
         'availability',
         'is_deleted',
     ];
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
 
     public function user()
     {

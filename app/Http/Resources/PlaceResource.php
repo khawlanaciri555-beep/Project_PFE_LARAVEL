@@ -47,7 +47,10 @@ class PlaceResource extends JsonResource
         // Add images from the database gallery if present
         if ($this->gallery && is_array($this->gallery)) {
             foreach ($this->gallery as $path) {
-                $images[] = asset('storage/' . $path);
+                // Ensure path starts with /storage/
+                $cleanPath = str_starts_with($path, '/') ? $path : '/' . $path;
+                $cleanPath = str_starts_with($cleanPath, '/storage') ? $cleanPath : '/storage/' . ltrim($cleanPath, '/');
+                $images[] = $cleanPath;
             }
         }
 
@@ -56,14 +59,20 @@ class PlaceResource extends JsonResource
             foreach ($files as $file) {
                 // Ensure we only take image files
                 if (preg_match('/\.(jpg|jpeg|png|webp)$/i', $file)) {
-                    $images[] = asset('storage/' . $file);
+                    $images[] = '/storage/' . $file;
                 }
             }
         }
 
         // Fallback to default image if no local images found
         if (empty($images) && $this->image) {
-            $images[] = str_starts_with($this->image, 'http') ? $this->image : asset('storage/' . $this->image);
+            if (str_starts_with($this->image, 'http')) {
+                $images[] = $this->image;
+            } else {
+                $cleanPath = str_starts_with($this->image, '/') ? $this->image : '/' . $this->image;
+                $cleanPath = str_starts_with($cleanPath, '/storage') ? $cleanPath : '/storage/' . ltrim($cleanPath, '/');
+                $images[] = $cleanPath;
+            }
         }
 
         $servicesRaw = $this->services()->with(['hotel', 'transport', 'cooperative'])->get();
@@ -76,11 +85,17 @@ class PlaceResource extends JsonResource
         ];
 
         foreach ($servicesRaw as $s) {
+            $cleanServiceImage = $s->image;
+            if ($cleanServiceImage && !str_starts_with($cleanServiceImage, 'http')) {
+                $cleanServiceImage = str_starts_with($cleanServiceImage, '/') ? $cleanServiceImage : '/' . $cleanServiceImage;
+                $cleanServiceImage = str_starts_with($cleanServiceImage, '/storage') ? $cleanServiceImage : '/storage/' . ltrim($cleanServiceImage, '/');
+            }
+
             $item = [
                 'id' => $s->id,
                 'title' => $s->title,
                 'type' => $s->type,
-                'image' => str_starts_with($s->image, 'http') ? $s->image : asset('storage/' . $s->image),
+                'image' => $cleanServiceImage,
                 'description' => $s->description,
                 'price' => $s->price,
                 'rating' => $s->rating ?? 0,
@@ -96,6 +111,46 @@ class PlaceResource extends JsonResource
                 $groupedServices['activites'][] = $item;
             }
         }
+
+        // Add providers who don't have services yet
+        $this->hotels()->whereDoesntHave('services')->get()->each(function($h) use (&$groupedServices) {
+            $groupedServices['hotels'][] = [
+                'id' => 'provider-' . $h->id,
+                'title' => $h->user->name ?? 'Hotel',
+                'type' => $h->type,
+                'image' => str_starts_with($h->image, 'http') ? $h->image : asset('storage/' . $h->image),
+                'description' => $h->description,
+                'price' => $h->price,
+                'rating' => 0,
+                'is_provider_only' => true
+            ];
+        });
+
+        $this->transports()->whereDoesntHave('services')->get()->each(function($t) use (&$groupedServices) {
+            $groupedServices['transport'][] = [
+                'id' => 'provider-' . $t->id,
+                'title' => $t->user->name ?? 'Transport',
+                'type' => $t->type,
+                'image' => 'placeholder.jpg',
+                'description' => $t->description,
+                'price' => $t->price,
+                'rating' => 0,
+                'is_provider_only' => true
+            ];
+        });
+
+        $this->cooperatives()->whereDoesntHave('services')->get()->each(function($c) use (&$groupedServices) {
+            $groupedServices['activites'][] = [
+                'id' => 'provider-' . $c->id,
+                'title' => $c->name ?? 'Cooperative',
+                'type' => 'Cooperative',
+                'image' => str_starts_with($c->image, 'http') ? $c->image : asset('storage/' . $c->image),
+                'description' => $c->description,
+                'price' => 0,
+                'rating' => 0,
+                'is_provider_only' => true
+            ];
+        });
 
         return [
             'id' => $this->id,

@@ -20,6 +20,21 @@ class Place extends Model
         'is_deleted',
     ];
 
+    public function hotels()
+    {
+        return $this->hasMany(Hotel::class);
+    }
+
+    public function cooperatives()
+    {
+        return $this->hasMany(Cooperative::class);
+    }
+
+    public function transports()
+    {
+        return $this->hasMany(Transport::class);
+    }
+
     public function services()
     {
         return $this->hasMany(Service::class);

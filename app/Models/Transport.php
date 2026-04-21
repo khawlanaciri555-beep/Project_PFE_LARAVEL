@@ -16,9 +16,17 @@ class Transport extends Model
         'availability',
         'description',
         'user_id',
+        'place_id',
+        'image',
+        'license_doc',
         'phone',
         'is_deleted',
     ];
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
 
     public function user()
     {
