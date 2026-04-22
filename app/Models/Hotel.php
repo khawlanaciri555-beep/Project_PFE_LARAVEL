@@ -11,6 +11,7 @@ class Hotel extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'type',
         'phone',
         'email',
@@ -19,9 +20,21 @@ class Hotel extends Model
         'price',
         'description',
         'user_id',
+        'place_id',
+        'image',
         'availability',
         'is_deleted',
+        'gallery',
     ];
+
+    protected $casts = [
+        'gallery' => 'array',
+    ];
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
 
     public function user()
     {

@@ -16,15 +16,18 @@ class HotelResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'type' => $this->type,
             'phone' => $this->phone,
             'email' => $this->email,
             'address' => $this->address,
-            'image' => $this->image ? (str_starts_with($this->image, 'http') ? $this->image : asset('storage/' . $this->image)) : null,
+            'image' => $this->image ? (str_starts_with($this->image, 'http') ? $this->image : (str_starts_with($this->image, '/storage') ? $this->image : '/storage/' . ltrim($this->image, '/'))) : null,
             'price' => $this->price,
             'description' => $this->description,
             'availability' => $this->availability,
             'is_deleted' => $this->is_deleted,
+            'services' => $this->services,
+            'gallery' => $this->gallery,
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,

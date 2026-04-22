@@ -21,6 +21,8 @@ class TransportResource extends JsonResource
             'availability' => $this->availability,
             'description' => $this->description,
             'phone' => $this->phone,
+            'image' => $this->image ? (str_starts_with($this->image, 'http') ? $this->image : (str_starts_with($this->image, '/storage') ? $this->image : '/storage/' . ltrim($this->image, '/'))) : null,
+            'license_doc' => $this->license_doc ? (str_starts_with($this->license_doc, 'http') ? $this->license_doc : (str_starts_with($this->license_doc, '/storage') ? $this->license_doc : '/storage/' . ltrim($this->license_doc, '/'))) : null,
             'is_deleted' => $this->is_deleted,
             'user' => [
                 'id' => $this->user->id,

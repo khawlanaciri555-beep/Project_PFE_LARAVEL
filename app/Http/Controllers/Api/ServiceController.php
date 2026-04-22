@@ -12,7 +12,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = \App\Models\Service::with(['cooperative', 'place', 'guide', 'hotel', 'transport'])
+        $services = \App\Models\Service::with(['cooperative', 'place', 'hotel', 'transport'])
             ->where('is_deleted', false)
             ->get();
         return \App\Http\Resources\ServiceResource::collection($services);
@@ -21,14 +21,15 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'cooperative_id' => 'required|exists:cooperatives,id',
-            'place_id' => 'required|exists:places,id',
-            'guide_id' => 'required|exists:guides,id',
-            'hotel_id' => 'required|exists:hotels,id',
-            'transport_id' => 'required|exists:transports,id',
-            'price' => 'required|integer',
+            'title'       => 'required|string',
+            'description' => 'sometimes|string|nullable',
+            'price'       => 'sometimes|numeric|nullable',
+            'type'        => 'sometimes|string|nullable',
+            'hotel_id'    => 'sometimes|exists:hotels,id|nullable',
+            'cooperative_id' => 'sometimes|exists:cooperatives,id|nullable',
+            'transport_id'   => 'sometimes|exists:transports,id|nullable',
+            'place_id'    => 'sometimes|exists:places,id|nullable',
+            'image'       => 'sometimes|string|nullable',
         ]);
 
         $service = \App\Models\Service::create($validated);
@@ -38,7 +39,7 @@ class ServiceController extends Controller
     public function show(\App\Models\Service $service)
     {
         if ($service->is_deleted) return response()->json(['message' => 'Service not found'], 404);
-        return new \App\Http\Resources\ServiceResource($service->load(['cooperative', 'place', 'guide', 'hotel', 'transport']));
+        return new \App\Http\Resources\ServiceResource($service->load(['cooperative', 'place', 'hotel', 'transport']));
     }
 
     public function update(Request $request, \App\Models\Service $service)
