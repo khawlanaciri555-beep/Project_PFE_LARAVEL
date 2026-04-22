@@ -16,6 +16,7 @@ class HotelResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'type' => $this->type,
             'phone' => $this->phone,
             'email' => $this->email,
@@ -25,6 +26,8 @@ class HotelResource extends JsonResource
             'description' => $this->description,
             'availability' => $this->availability,
             'is_deleted' => $this->is_deleted,
+            'services' => $this->services,
+            'gallery' => $this->gallery,
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,

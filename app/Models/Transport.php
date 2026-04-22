@@ -21,6 +21,11 @@ class Transport extends Model
         'license_doc',
         'phone',
         'is_deleted',
+        'gallery',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
     ];
 
     public function place()

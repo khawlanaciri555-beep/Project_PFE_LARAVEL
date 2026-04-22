@@ -11,6 +11,7 @@ class Hotel extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'type',
         'phone',
         'email',
@@ -23,6 +24,11 @@ class Hotel extends Model
         'image',
         'availability',
         'is_deleted',
+        'gallery',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
     ];
 
     public function place()

@@ -23,6 +23,11 @@ class Cooperative extends Model
         'certificate',
         'availability',
         'is_deleted',
+        'gallery',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
     ];
 
     public function place()

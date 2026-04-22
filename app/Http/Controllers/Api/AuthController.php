@@ -28,6 +28,9 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'] ?? 'customer',
+            'phone' => $validated['phone'] ?? null,
+            'address' => $validated['address'] ?? null,
+            'bio' => $validated['description'] ?? null,
         ]);
 
         // Handle Image Upload
@@ -41,6 +44,7 @@ class AuthController extends Controller
         if ($user->role === 'hotel') {
              \App\Models\Hotel::create([
                  'user_id' => $user->id,
+                 'name' => $user->name,
                  'phone' => $request->phone ?? '',
                  'email' => $user->email,
                  'address' => $request->address ?? '',

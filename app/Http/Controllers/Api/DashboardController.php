@@ -60,11 +60,11 @@ class DashboardController extends Controller
         $profile = null;
 
         if ($user->role === 'hotel') {
-            $profile = $user->hotels()->first();
+            $profile = $user->hotels()->with('services')->first();
         } elseif ($user->role === 'coop' || $user->role === 'cooperative') {
-            $profile = $user->cooperatives()->first();
+            $profile = $user->cooperatives()->with('services')->first();
         } elseif ($user->role === 'transport') {
-            $profile = $user->transports()->first();
+            $profile = $user->transports()->with('services')->first();
         }
 
         return response()->json([
@@ -76,16 +76,56 @@ class DashboardController extends Controller
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
-        $user->update(['name' => $request->name]);
+        $user->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'bio' => $request->description,
+        ]);
 
-        if ($user->role === 'hotel') {
-            $user->hotels()->first()?->update($request->only(['phone', 'address', 'description', 'price', 'type']));
-        } elseif ($user->role === 'coop' || $user->role === 'cooperative') {
-            $user->cooperatives()->first()?->update($request->only(['name', 'phone', 'address', 'description']));
-        } elseif ($user->role === 'transport') {
-            $user->transports()->first()?->update($request->only(['phone', 'description', 'type']));
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $path = 'providers';
+            if ($user->role === 'hotel') $path = 'hotels';
+            elseif ($user->role === 'transport') $path = 'transports';
+            elseif ($user->role === 'coop' || $user->role === 'cooperative') $path = 'cooperatives';
+            
+            $imagePath = $request->file('image')->store($path, 'public');
         }
 
-        return response()->json(['message' => 'Profile updated successfully']);
+        if ($user->role === 'hotel') {
+            $updateData = $request->only(['phone', 'address', 'description', 'price', 'type']);
+            if ($imagePath) $updateData['image'] = $imagePath;
+            $user->hotels()->first()?->update($updateData);
+        } elseif ($user->role === 'coop' || $user->role === 'cooperative') {
+            $updateData = $request->only(['name', 'phone', 'address', 'description']);
+            if ($imagePath) $updateData['image'] = $imagePath;
+            $user->cooperatives()->first()?->update($updateData);
+        } elseif ($user->role === 'transport') {
+            $updateData = $request->only(['phone', 'description', 'type']);
+            if ($imagePath) $updateData['image'] = $imagePath;
+            $user->transports()->first()?->update($updateData);
+        }
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'image' => $imagePath
+        ]);
+    }
+
+    public function updateGallery(Request $request)
+    {
+        $user = Auth::user();
+        $gallery = $request->input('gallery', []);
+
+        if ($user->role === 'hotel') {
+            $user->hotels()->first()?->update(['gallery' => $gallery]);
+        } elseif ($user->role === 'coop' || $user->role === 'cooperative') {
+            $user->cooperatives()->first()?->update(['gallery' => $gallery]);
+        } elseif ($user->role === 'transport') {
+            $user->transports()->first()?->update(['gallery' => $gallery]);
+        }
+
+        return response()->json(['message' => 'Gallery updated successfully']);
     }
 }

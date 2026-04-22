@@ -75,7 +75,13 @@ class PlaceResource extends JsonResource
             }
         }
 
-        $servicesRaw = $this->services()->with(['hotel', 'transport', 'cooperative'])->get();
+        // 1. Process Standalone Services (not linked to any provider)
+        $standaloneServices = \App\Models\Service::where('place_id', $this->id)
+            ->whereNull('hotel_id')
+            ->whereNull('transport_id')
+            ->whereNull('cooperative_id')
+            ->get();
+
         $groupedServices = [
             'guides' => [],
             'hotels' => [],
@@ -84,7 +90,7 @@ class PlaceResource extends JsonResource
             'transport' => []
         ];
 
-        foreach ($servicesRaw as $s) {
+        foreach ($standaloneServices as $s) {
             $cleanServiceImage = $s->image;
             if ($cleanServiceImage && !str_starts_with($cleanServiceImage, 'http')) {
                 $cleanServiceImage = str_starts_with($cleanServiceImage, '/') ? $cleanServiceImage : '/' . $cleanServiceImage;
@@ -101,45 +107,49 @@ class PlaceResource extends JsonResource
                 'rating' => $s->rating ?? 0,
             ];
 
-            if ($s->hotel_id) {
-                // If it's linked to a hotel, we use the hotel type if available
-                $item['hotel_type'] = $s->hotel ? $s->hotel->type : $s->type;
-                $groupedServices['hotels'][] = $item;
-            } elseif ($s->transport_id) {
-                $groupedServices['transport'][] = $item;
+            // Put standalone services in appropriate tabs based on type
+            $typeLower = strtolower($s->type);
+            if ($typeLower === 'restaurant') {
+                $groupedServices['restaurants'][] = $item;
+            } elseif ($typeLower === 'guide') {
+                $groupedServices['guides'][] = $item;
             } else {
-                $groupedServices['activites'][] = $item;
+                $groupedServices['activites'][] = $item; // Default to activities
             }
         }
 
-        // Add providers who don't have services yet
-        $this->hotels()->whereDoesntHave('services')->get()->each(function($h) use (&$groupedServices) {
+        // 2. Add ALL Providers as main cards
+        $this->hotels()->get()->each(function($h) use (&$groupedServices) {
             $groupedServices['hotels'][] = [
                 'id' => 'provider-' . $h->id,
-                'title' => $h->user->name ?? 'Hotel',
+                'title' => $h->name ?? 'Hotel',
                 'type' => $h->type,
                 'image' => str_starts_with($h->image, 'http') ? $h->image : asset('storage/' . $h->image),
                 'description' => $h->description,
-                'price' => $h->price,
+                'price' => $h->price ?? 0,
                 'rating' => 0,
-                'is_provider_only' => true
+                'is_provider_only' => true,
+                'provider_id' => $h->id,
+                'provider_type' => 'hotel'
             ];
         });
 
-        $this->transports()->whereDoesntHave('services')->get()->each(function($t) use (&$groupedServices) {
+        $this->transports()->with('user')->get()->each(function($t) use (&$groupedServices) {
             $groupedServices['transport'][] = [
                 'id' => 'provider-' . $t->id,
                 'title' => $t->user->name ?? 'Transport',
                 'type' => $t->type,
-                'image' => 'placeholder.jpg',
+                'image' => str_starts_with($t->image, 'http') ? $t->image : asset('storage/' . $t->image),
                 'description' => $t->description,
-                'price' => $t->price,
+                'price' => $t->price ?? 0,
                 'rating' => 0,
-                'is_provider_only' => true
+                'is_provider_only' => true,
+                'provider_id' => $t->id,
+                'provider_type' => 'transport'
             ];
         });
 
-        $this->cooperatives()->whereDoesntHave('services')->get()->each(function($c) use (&$groupedServices) {
+        $this->cooperatives()->get()->each(function($c) use (&$groupedServices) {
             $groupedServices['activites'][] = [
                 'id' => 'provider-' . $c->id,
                 'title' => $c->name ?? 'Cooperative',
@@ -148,7 +158,9 @@ class PlaceResource extends JsonResource
                 'description' => $c->description,
                 'price' => 0,
                 'rating' => 0,
-                'is_provider_only' => true
+                'is_provider_only' => true,
+                'provider_id' => $c->id,
+                'provider_type' => 'cooperative'
             ];
         });
 

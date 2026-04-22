@@ -7,6 +7,7 @@ Route::get('/user', [\App\Http\Controllers\Api\AuthController::class, 'user'])->
 
 Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+Route::post('/upload', [\App\Http\Controllers\Api\UploadController::class, 'upload']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
@@ -15,14 +16,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('emergencies', \App\Http\Controllers\Api\EmergencyController::class);
     Route::post('/ratings', [\App\Http\Controllers\Api\RatingController::class, 'store']);
     Route::post('/comments', [\App\Http\Controllers\Api\CommentController::class, 'store']);
+    Route::get('/my-hotels', [\App\Http\Controllers\Api\HotelController::class, 'myHotels']);
+    Route::apiResource('hotels', \App\Http\Controllers\Api\HotelController::class)->except(['index', 'show']);
 });
 
-Route::get('/places/{placeId}/comments', [\App\Http\Controllers\Api\CommentController::class, 'index']);
-Route::post('/upload', [\App\Http\Controllers\Api\UploadController::class, 'upload']);
-
-Route::apiResource('hotels', \App\Http\Controllers\Api\HotelController::class);
+Route::get('/hotels', [\App\Http\Controllers\Api\HotelController::class, 'index']);
+Route::get('/hotels/{hotel}', [\App\Http\Controllers\Api\HotelController::class, 'show']);
 Route::apiResource('cooperatives', \App\Http\Controllers\Api\CooperativeController::class);
 Route::apiResource('transports', \App\Http\Controllers\Api\TransportController::class);
+Route::get('/places/{placeId}/comments', [\App\Http\Controllers\Api\CommentController::class, 'index']);
 Route::apiResource('places', \App\Http\Controllers\Api\PlaceController::class);
 Route::apiResource('services', \App\Http\Controllers\Api\ServiceController::class);
 Route::apiResource('bookings', \App\Http\Controllers\Api\BookingController::class);
@@ -31,4 +33,5 @@ Route::middleware('auth:sanctum')->prefix('dashboard')->group(function() {
     Route::get('/stats', [\App\Http\Controllers\Api\DashboardController::class, 'stats']);
     Route::get('/profile', [\App\Http\Controllers\Api\DashboardController::class, 'profile']);
     Route::put('/profile', [\App\Http\Controllers\Api\DashboardController::class, 'updateProfile']);
+    Route::put('/gallery', [\App\Http\Controllers\Api\DashboardController::class, 'updateGallery']);
 });
