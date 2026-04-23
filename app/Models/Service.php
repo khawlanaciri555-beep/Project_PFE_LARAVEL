@@ -54,18 +54,30 @@ class Service extends Model
     {
         if (!$this->image) return [];
         
-        // If the image is stored in storage/Activiti/...
-        // We can find other images in the same folder
-        $path = public_path($this->image);
-        if (file_exists($path)) {
-            $directory = dirname($path);
-            if (str_contains($directory, 'Activiti')) {
-                $files = glob($directory . '/*.{jpg,jpeg,png,webp,PNG}', GLOB_BRACE);
-                return array_map(function($file) {
-                    // Convert absolute path back to public path
-                    return str_replace(public_path(), '', $file);
-                }, $files);
+        // Build absolute path, normalize slashes for Windows compatibility
+        $imagePath = ltrim(str_replace('\\', '/', $this->image), '/');
+        $absPath = public_path() . '/' . $imagePath;
+        $absPath = str_replace('\\', '/', $absPath);
+
+        if (!file_exists($absPath)) {
+            return [$this->image];
+        }
+
+        $directory = dirname($absPath);
+        
+        if (str_contains($directory, 'Activiti')) {
+            $files = glob($directory . '/*.{jpg,jpeg,png,webp,PNG}', GLOB_BRACE);
+            if (empty($files)) {
+                return [$this->image];
             }
+            return array_values(array_map(function($file) {
+                // Normalize to forward slashes and make relative to public/
+                $file = str_replace('\\', '/', $file);
+                $publicPath = str_replace('\\', '/', public_path());
+                $relative = str_replace($publicPath, '', $file);
+                // Ensure single leading slash
+                return '/' . ltrim($relative, '/');
+            }, $files));
         }
         
         return [$this->image];
