@@ -33,7 +33,7 @@ class TransportController extends Controller
     public function show(\App\Models\Transport $transport)
     {
         if ($transport->is_deleted) return response()->json(['message' => 'Transport not found'], 404);
-        return new \App\Http\Resources\TransportResource($transport);
+        return new \App\Http\Resources\TransportResource($transport->load(['services', 'user']));
     }
 
     public function update(Request $request, \App\Models\Transport $transport)

@@ -26,8 +26,12 @@ class HotelResource extends JsonResource
             'description' => $this->description,
             'availability' => $this->availability,
             'is_deleted' => $this->is_deleted,
-            'services' => $this->services,
-            'gallery' => $this->gallery,
+            'services' => ServiceResource::collection($this->whenLoaded('services')),
+            'gallery' => $this->gallery ? array_map(function($item) {
+                $path = is_array($item) ? ($item['url'] ?? '') : $item;
+                if (!$path) return null;
+                return str_starts_with($path, 'http') ? $path : (str_starts_with($path, '/storage') ? $path : '/storage/' . ltrim($path, '/'));
+            }, array_filter($this->gallery)) : [],
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,

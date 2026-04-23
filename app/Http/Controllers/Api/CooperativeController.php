@@ -35,7 +35,7 @@ class CooperativeController extends Controller
     public function show(\App\Models\Cooperative $cooperative)
     {
         if ($cooperative->is_deleted) return response()->json(['message' => 'Cooperative not found'], 404);
-        return new \App\Http\Resources\CooperativeResource($cooperative);
+        return new \App\Http\Resources\CooperativeResource($cooperative->load('services'));
     }
 
     public function update(Request $request, \App\Models\Cooperative $cooperative)

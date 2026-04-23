@@ -25,6 +25,10 @@ class CooperativeResource extends JsonResource
             'description' => $this->description,
             'availability' => $this->availability,
             'is_deleted' => $this->is_deleted,
+            'services' => ServiceResource::collection($this->whenLoaded('services')),
+            'gallery' => $this->gallery ? array_map(function($path) {
+                return str_starts_with($path, 'http') ? $path : (str_starts_with($path, '/storage') ? $path : '/storage/' . ltrim($path, '/'));
+            }, $this->gallery) : [],
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,

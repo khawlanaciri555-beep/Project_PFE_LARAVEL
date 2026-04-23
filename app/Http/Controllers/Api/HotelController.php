@@ -57,7 +57,7 @@ class HotelController extends Controller
     public function show(\App\Models\Hotel $hotel)
     {
         if ($hotel->is_deleted) return response()->json(['message' => 'Hotel not found'], 404);
-        return new \App\Http\Resources\HotelResource($hotel);
+        return new \App\Http\Resources\HotelResource($hotel->load('services'));
     }
 
     public function update(Request $request, \App\Models\Hotel $hotel)

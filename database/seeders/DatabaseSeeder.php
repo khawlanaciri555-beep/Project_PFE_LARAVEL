@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             CooperativeSeeder::class,
             TransportSeeder::class,
             ServiceSeeder::class,
+            ActivitySeeder::class,
             BookingSeeder::class,
             FavoriteSeeder::class,
             PlanningSeeder::class,

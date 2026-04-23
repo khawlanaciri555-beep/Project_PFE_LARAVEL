@@ -120,11 +120,17 @@ class PlaceResource extends JsonResource
 
         // 2. Add ALL Providers as main cards
         $this->hotels()->get()->each(function($h) use (&$groupedServices) {
+            $img = $h->image;
+            if ($img && !str_starts_with($img, 'http')) {
+                $img = str_starts_with($img, '/') ? $img : '/' . $img;
+                $img = str_starts_with($img, '/storage') ? $img : '/storage/' . ltrim($img, '/');
+            }
+            
             $groupedServices['hotels'][] = [
                 'id' => 'provider-' . $h->id,
                 'title' => $h->name ?? 'Hotel',
                 'type' => $h->type,
-                'image' => str_starts_with($h->image, 'http') ? $h->image : asset('storage/' . $h->image),
+                'image' => $img,
                 'description' => $h->description,
                 'price' => $h->price ?? 0,
                 'rating' => 0,
@@ -135,11 +141,17 @@ class PlaceResource extends JsonResource
         });
 
         $this->transports()->with('user')->get()->each(function($t) use (&$groupedServices) {
+            $img = $t->image;
+            if ($img && !str_starts_with($img, 'http')) {
+                $img = str_starts_with($img, '/') ? $img : '/' . $img;
+                $img = str_starts_with($img, '/storage') ? $img : '/storage/' . ltrim($img, '/');
+            }
+
             $groupedServices['transport'][] = [
                 'id' => 'provider-' . $t->id,
                 'title' => $t->user->name ?? 'Transport',
                 'type' => $t->type,
-                'image' => str_starts_with($t->image, 'http') ? $t->image : asset('storage/' . $t->image),
+                'image' => $img,
                 'description' => $t->description,
                 'price' => $t->price ?? 0,
                 'rating' => 0,
@@ -150,17 +162,23 @@ class PlaceResource extends JsonResource
         });
 
         $this->cooperatives()->get()->each(function($c) use (&$groupedServices) {
+            $img = $c->image;
+            if ($img && !str_starts_with($img, 'http')) {
+                $img = str_starts_with($img, '/') ? $img : '/' . $img;
+                $img = str_starts_with($img, '/storage') ? $img : '/storage/' . ltrim($img, '/');
+            }
+
             $groupedServices['activites'][] = [
                 'id' => 'provider-' . $c->id,
                 'title' => $c->name ?? 'Cooperative',
                 'type' => 'Cooperative',
-                'image' => str_starts_with($c->image, 'http') ? $c->image : asset('storage/' . $c->image),
+                'image' => $img,
                 'description' => $c->description,
                 'price' => 0,
                 'rating' => 0,
                 'is_provider_only' => true,
                 'provider_id' => $c->id,
-                'provider_type' => 'cooperative'
+                'provider_type' => 'coop'
             ];
         });
 
