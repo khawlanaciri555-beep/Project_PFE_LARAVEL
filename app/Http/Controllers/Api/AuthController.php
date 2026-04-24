@@ -50,7 +50,7 @@ class AuthController extends Controller
                  'address' => $request->address ?? '',
                  'description' => $request->description ?? '',
                  'place_id' => $request->place_id,
-                 'type' => 'hotel',
+                 'type' => $request->accommodation_type ?? 'hotel', // Save 'hotel' or 'riad'
                  'image' => $imagePath,
                  'price' => 0,
              ]);

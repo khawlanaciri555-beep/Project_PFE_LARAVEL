@@ -13,7 +13,7 @@ class PlaceSeeder extends Seeder
             [
                 'name' => 'Mosquée Koutoubia',
                 'category' => 'Monument',
-                'description' => "La plus grande mosquée de Marrakech, célèbre pour son minaret de 77 mètres. Un chef-d'œuvre de l'architecture hispano-mauresque.",
+                'description' => "Véritable phare spirituel de Marrakech, la Koutoubia dresse son minaret de 77 mètres, orné de quatre boules de cuivre doré, au-dessus de la ville. Construite au XIIe siècle sous les Almohades, son architecture sobre mais imposante a servi de modèle à la Giralda de Séville. Ses jardins environnants offrent une oasis de fraîcheur et un point de vue imprenable sur ce chef-d'œuvre de pierre ocre.",
                 'coordinates' => '31.6235, -7.9936',
                 'image' => '/storage/places/Mosquée Koutoubia/WhatsApp Image 2026-04-06 at 4.02.35 PM (1).jpeg',
                 'address' => 'Avenue Mohammed V, Marrakech',
@@ -21,7 +21,7 @@ class PlaceSeeder extends Seeder
             [
                 'name' => 'Place Jemaa el-Fna',
                 'category' => 'Atmosphere',
-                'description' => "Le cœur battant de Marrakech. Charmeurs de serpents, conteurs, musiciens et stands de nourriture.",
+                'description' => "Théâtre de rue permanent classé au patrimoine mondial de l'UNESCO, Jemaa el-Fna est le cœur palpitant de la Médina. Le jour, c'est un marché grouillant de vendeurs de jus d'orange et de charmeurs de serpents. La nuit, elle se transforme en un gigantesque restaurant à ciel ouvert où conteurs, musiciens et acrobates perpétuent des traditions millénaires sous les lueurs des lanternes.",
                 'coordinates' => '31.6258, -7.9891',
                 'image' => '/storage/places/Place Jemaa el-Fna/WhatsApp Image 2026-04-06 at 4.09.59 PM (1).jpeg',
                 'address' => 'Médina, Marrakech',
@@ -29,7 +29,7 @@ class PlaceSeeder extends Seeder
             [
                 'name' => 'Jardin Majorelle',
                 'category' => 'Jardin',
-                'description' => "Un jardin botanique luxuriant conçu par l'artiste Jacques Majorelle, célèbre pour son bleu cobalt vif.",
+                'description' => "Conçu par le peintre français Jacques Majorelle sur quarante ans, ce jardin botanique est une symphonie de plantes exotiques et d'espèces rares venues des cinq continents. Le bleu 'Majorelle' intense de la villa Art déco contraste magnifiquement avec le vert luxuriant des cactus et des bougainvilliers. Restauré par Yves Saint Laurent et Pierre Bergé, c'est l'un des lieux les plus enchanturs et photographiés de la ville.",
                 'coordinates' => '31.6416, -8.0033',
                 'image' => '/storage/places/Jardin Majorelle/WhatsApp Image 2026-04-06 at 3.47.16 PM (1).jpeg',
                 'address' => 'Rue Yves Saint Laurent, Marrakech',
@@ -37,7 +37,7 @@ class PlaceSeeder extends Seeder
             [
                 'name' => 'Palais de la Bahia',
                 'category' => 'Palais',
-                'description' => "Un palais du 19ème siècle magnifiquement décoré avec des mosaïques et des sculptures sur bois.",
+                'description' => "Le 'Palais de la Belle' est un chef-d'œuvre de l'architecture marocaine s'étendant sur 8 hectares. Construit à la fin du XIXe siècle pour être le plus grand palais de son temps, il regorge de cours intérieures pavées de marbre, de jardins odorants (riads) et de pièces richement ornées de plafonds en cèdre sculpté et de mosaïques de zellige aux motifs géométriques complexes.",
                 'coordinates' => '31.6217, -7.9816',
                 'image' => '/storage/places/Palais de la Bahia/WhatsApp Image 2026-04-06 at 3.39.52 PM (1).jpeg',
                 'address' => 'Avenue Imam El Ghazali, Marrakech',
@@ -77,7 +77,7 @@ class PlaceSeeder extends Seeder
             [
                 'name' => "Désert d'Agafay",
                 'category' => 'Adventure',
-                'description' => "Un désert rocailleux à seulement 30 km de Marrakech. Parfait pour les promenades à dos de chameau.",
+                'description' => "Surnommé le 'désert de Marrakech', Agafay n'est pas fait de sable mais de collines de pierres s'étendant à perte de vue comme des dunes. Ce paysage lunaire offre un contraste saisissant avec les sommets enneigés de l'Atlas en arrière-plan. C'est le lieu idéal pour une échappée sauvage, une nuit sous tente berbère luxueuse ou un dîner romantique sous les étoiles.",
                 'coordinates' => '31.3983, -8.1517',
                 'image' => "/storage/places/Désert d'Agafay/WhatsApp Image 2026-04-06 at 4.31.51 PM (1).jpeg",
                 'address' => "Route d'Amezmiz, Marrakech",
