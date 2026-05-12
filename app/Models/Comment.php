@@ -13,6 +13,9 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'place_id',
+        'cooperative_id',
+        'transport_id',
+        'hotel_id',
         'content',
     ];
 
@@ -24,5 +27,20 @@ class Comment extends Model
     public function place()
     {
         return $this->belongsTo(Place::class);
+    }
+
+    public function cooperative()
+    {
+        return $this->belongsTo(Cooperative::class);
+    }
+
+    public function transport()
+    {
+        return $this->belongsTo(Transport::class);
+    }
+
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
     }
 }

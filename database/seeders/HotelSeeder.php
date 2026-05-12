@@ -29,6 +29,7 @@ class HotelSeeder extends Seeder
 
         foreach(array_merge($riads, $hotels) as $item) {
             $hotelId = DB::table('hotels')->insertGetId([
+                'name' => $item['title'],
                 'type' => $item['type'],
                 'phone' => '+212 524 123 456',
                 'email' => str_replace(' ', '', strtolower($item['title'])) . '@example.com',
@@ -36,6 +37,7 @@ class HotelSeeder extends Seeder
                 'image' => $item['image'],
                 'price' => $item['price'],
                 'description' => $item['desc'],
+                'place_id' => $place_id,
                 'availability' => true,
                 'is_deleted' => false,
                 'created_at' => now(), 'updated_at' => now()

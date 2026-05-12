@@ -26,6 +26,7 @@ class ServiceResource extends JsonResource
             'is_deleted' => $this->is_deleted,
             'cooperative' => new CooperativeResource($this->cooperative),
             'place' => new PlaceResource($this->place),
+            'place_id' => $this->place_id,
             'hotel' => new HotelResource($this->hotel),
             'transport' => new TransportResource($this->transport),
             'provider_id' => $this->hotel_id ?: ($this->transport_id ?: ($this->cooperative_id ?: null)),

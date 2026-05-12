@@ -16,9 +16,8 @@ class PlanningResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'is_deleted' => $this->is_deleted,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
             'items' => PlanningItemResource::collection($this->planningItems),
             'created_at' => $this->created_at,
         ];

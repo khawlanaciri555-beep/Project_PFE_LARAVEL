@@ -14,7 +14,6 @@ class PlanningController extends Controller
     {
         $plannings = \App\Models\Planning::with('planningItems.place')
             ->where('user_id', auth()->id())
-            ->where('is_deleted', false)
             ->get();
         return \App\Http\Resources\PlanningResource::collection($plannings);
     }
@@ -33,7 +32,6 @@ class PlanningController extends Controller
 
     public function show(\App\Models\Planning $planning)
     {
-        if ($planning->is_deleted) return response()->json(['message' => 'Planning not found'], 404);
         return new \App\Http\Resources\PlanningResource($planning->load('planningItems.place'));
     }
 

@@ -11,6 +11,8 @@ Route::post('/upload', [\App\Http\Controllers\Api\UploadController::class, 'uplo
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+    Route::post('/itineraries', [\App\Http\Controllers\Api\ItineraryController::class, 'store']);
+    Route::get('/my-bookings', [\App\Http\Controllers\Api\BookingController::class, 'myBookings']);
     Route::apiResource('favorites', \App\Http\Controllers\Api\FavoriteController::class);
     Route::apiResource('plannings', \App\Http\Controllers\Api\PlanningController::class);
     Route::apiResource('emergencies', \App\Http\Controllers\Api\EmergencyController::class);
@@ -27,7 +29,9 @@ Route::apiResource('transports', \App\Http\Controllers\Api\TransportController::
 Route::get('/places/{placeId}/comments', [\App\Http\Controllers\Api\CommentController::class, 'index']);
 Route::apiResource('places', \App\Http\Controllers\Api\PlaceController::class);
 Route::apiResource('services', \App\Http\Controllers\Api\ServiceController::class);
+Route::get('/testimonials', [\App\Http\Controllers\Api\CommentController::class, 'testimonials']);
 Route::apiResource('bookings', \App\Http\Controllers\Api\BookingController::class);
+Route::patch('bookings/{booking}/status', [\App\Http\Controllers\Api\BookingController::class, 'updateStatus']);
 
 Route::middleware('auth:sanctum')->prefix('dashboard')->group(function() {
     Route::get('/stats', [\App\Http\Controllers\Api\DashboardController::class, 'stats']);

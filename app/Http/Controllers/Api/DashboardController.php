@@ -41,16 +41,18 @@ class DashboardController extends Controller
             $serviceIds = Service::whereIn('transport_id', $user->transports()->pluck('id'))->pluck('id');
         }
 
-        $bookingsCount = Booking::whereIn('service_id', $serviceIds)->where('is_deleted', false)->count();
+        $bookings = Booking::with('user')->whereIn('service_id', $serviceIds)->where('is_deleted', false)->get();
+        $pendingBookings = $bookings->where('status', 'pending');
 
         return response()->json([
             'favorites' => 0,
-            'bookings' => $bookingsCount,
-            'pending' => 0, // Mocked
+            'bookings' => $bookings->count(),
+            'pending' => $pendingBookings->count(),
             'rating' => 4.9, // Mocked
             'services' => count($serviceIds),
-            'requests' => $bookingsCount,
+            'requests' => $bookings->count(),
             'clients' => Booking::whereIn('service_id', $serviceIds)->distinct('user_id')->count(),
+            'pending_requests' => $pendingBookings->values(), // To be displayed in the dashboard list
         ]);
     }
 

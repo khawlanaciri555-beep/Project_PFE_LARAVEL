@@ -12,7 +12,17 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = \App\Models\Booking::with(['user', 'service.hotel', 'service.guide', 'service.transport', 'service.place'])
+        $bookings = \App\Models\Booking::with(['user', 'service.hotel', 'service.cooperative', 'service.transport', 'service.place'])
+            ->where('is_deleted', false)
+            ->get();
+        return \App\Http\Resources\BookingResource::collection($bookings);
+    }
+
+    public function myBookings(Request $request)
+    {
+        $user = $request->user();
+        $bookings = \App\Models\Booking::with(['user', 'service.hotel', 'service.cooperative', 'service.transport', 'service.place'])
+            ->where('user_id', $user->id)
             ->where('is_deleted', false)
             ->get();
         return \App\Http\Resources\BookingResource::collection($bookings);
@@ -23,8 +33,8 @@ class BookingController extends Controller
         $validated = $request->validate([
             'service_id' => 'required|exists:services,id',
             'user_id' => 'required|exists:users,id',
-            'start_date' => 'required|date|after:today',
-            'end_date' => 'required|date|after:start_date',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
         $booking = \App\Models\Booking::create($validated);
@@ -46,6 +56,16 @@ class BookingController extends Controller
 
         $booking->update($validated);
         return new \App\Http\Resources\BookingResource($booking);
+    }
+
+    public function updateStatus(Request $request, \App\Models\Booking $booking)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:pending,accepted,rejected',
+        ]);
+
+        $booking->update(['status' => $validated['status']]);
+        return response()->json(['message' => 'Status updated successfully', 'booking' => new \App\Http\Resources\BookingResource($booking)]);
     }
 
     public function destroy(\App\Models\Booking $booking)

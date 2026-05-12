@@ -18,6 +18,7 @@ class PlanningItemResource extends JsonResource
             'id' => $this->id,
             'planning_id' => $this->planning_id,
             'place' => new PlaceResource($this->place),
+            'time' => $this->time,
             'created_at' => $this->created_at,
         ];
     }

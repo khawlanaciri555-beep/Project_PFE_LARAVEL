@@ -15,6 +15,7 @@ class Booking extends Model
         'service_id',
         'start_date',
         'end_date',
+        'status',
         'is_deleted',
     ];
 

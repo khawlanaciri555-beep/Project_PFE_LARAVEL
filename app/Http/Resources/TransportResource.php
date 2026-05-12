@@ -26,6 +26,7 @@ class TransportResource extends JsonResource
             'image' => $this->image ? (str_starts_with($this->image, 'http') ? $this->image : (str_starts_with($this->image, '/storage') ? $this->image : '/storage/' . ltrim($this->image, '/'))) : null,
             'license_doc' => $this->license_doc ? (str_starts_with($this->license_doc, 'http') ? $this->license_doc : (str_starts_with($this->license_doc, '/storage') ? $this->license_doc : '/storage/' . ltrim($this->license_doc, '/'))) : null,
             'is_deleted' => $this->is_deleted,
+            'place_id' => $this->place_id,
             'gallery' => $this->gallery ? array_map(function($item) {
                 $path = is_array($item) ? ($item['url'] ?? '') : $item;
                 if (!$path) return null;
